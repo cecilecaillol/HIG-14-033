@@ -1,7 +1,7 @@
 
 # Working directory
 BASE=$(CMSSW_BASE)/src
-WD=$(BASE)/AN-14-223_v2
+WD=$(BASE)/HIG-14-033
 
 # Location of the CGS and uncertainty configuration files
 SETUP=$(BASE)/HiggsAnalysis/HiggsToTauTau/setup/em
@@ -10,7 +10,6 @@ SETUPBBB=$(BASE)/HiggsAnalysis/HiggsToTauTau/setup_bbb
 SETUPBBB2=$(BASE)/HiggsAnalysis/HiggsToTauTau/setup_bbb2
 HTT_TEST=$(BASE)/HiggsAnalysis/HiggsToTauTau/test
 
-# where the limit directory lives (in HIG-12-053) 
 LIMITDIR=$(WD)/limits
 
 # where the raw generated cards are generated.
