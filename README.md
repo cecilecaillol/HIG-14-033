@@ -41,11 +41,14 @@ important commands are:
 cd HIG-14-033
 ```
 
-# Run the post fit and make all the final mass distribution plots
+Run the post fit and make all the final mass distribution plots
+
 make massplots
 
-# Compute all the limits
+Compute all the limits
+
 make limits
-# Plot the limits (they show up in limits/*pdf)
+
+Plot the limits (they show up in limits/*pdf)
 make plotlimits
 
