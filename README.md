@@ -26,6 +26,14 @@ then check out this package:
 git clone https://github.com/cecilecaillol/HIG-14-033.git
 ```
 
+Copy the files:
+
+```shell
+cp HIG-14-033/uncertainty_files/* HiggsAnalysis/HiggsToTauTau/setup/em/.
+cp HIG-14-033/root_file/*.root auxiliaries/shapes/VHTT/.
+cp HIG-14-033/postfit_right_errors.py HiggsAnalysis/HiggsToTauTau/test/postfit.py
+```
+
 To clean the directories from previous files and results:
 ```shell
 sh clean.sh
@@ -43,12 +51,19 @@ cd HIG-14-033
 
 Run the post fit and make all the final mass distribution plots
 
+```shell
 make massplots
+```
 
 Compute all the limits
 
+```shell
 make limits
+```
 
 Plot the limits (they show up in limits/*pdf)
+
+```shell
 make plotlimits
+```
 
