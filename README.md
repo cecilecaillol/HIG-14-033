@@ -35,6 +35,27 @@ cp HIG-14-033/postfit_right_errors.py HiggsAnalysis/HiggsToTauTau/test/postfit.p
 cp HIG-14-033/sm_em*.py HiggsAnalysis/HiggsToTauTau/python/layouts/.
 ```
 
+Changes to HiggsTauTau package:
+
+Extend mass range in setup-datacard.py (line 129), cvs2local.py (line 162). In python/utils.py (line 237):
+
+```shell
+        'em' : {
+        '00' : ['0jet_low' ],
+        '01' : ['emu_btag'],
+        '02' : ['1jet_low' ],
+        '03' : ['mutau_btag'],
+        '04' : ['etau_btag'],
+        '05' : ['vbf_tight'],
+
+```
+
+In python/utils.py (line 156):
+
+```shell
+        'em'  : '',
+```
+
 To clean the directories from previous files and results:
 ```shell
 cd HIG-14-033
