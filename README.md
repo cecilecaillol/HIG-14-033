@@ -32,10 +32,12 @@ Copy the files:
 cp HIG-14-033/uncertainty_files/* HiggsAnalysis/HiggsToTauTau/setup/em/.
 cp HIG-14-033/root_file/*.root auxiliaries/shapes/VHTT/.
 cp HIG-14-033/postfit_right_errors.py HiggsAnalysis/HiggsToTauTau/test/postfit.py
+cp HIG-14-033/sm_em*.py HiggsAnalysis/HiggsToTauTau/python/layouts/.
 ```
 
 To clean the directories from previous files and results:
 ```shell
+cd HIG-14-033
 sh clean.sh
 ```
 
