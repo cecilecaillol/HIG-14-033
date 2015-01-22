@@ -44,7 +44,7 @@ $(CARDS)/.zh8_timestamp: $(SHAPEFILE8) $(ZH_CONFIGS8)
 	rm -f $(CARDS)/em_4_8TeV*
 	#rm -f $(CARDS)/em_5_8TeV*
 	rm -f $@
-	cd $(BASE)  && $(WD)/add_bbb_errors_VH.py -f 'em:8TeV:01:Fakes,DYlow' -i $(SETUP1) -o $(SETUPBBB) --threshold 0.10 && $(WD)/add_bbb_errors_VH.py -f 'em:8TeV:03,04:W,QCD,ZTT_lowMass' -i $(SETUPBBB) -o $(SETUPBBB2) --threshold 0.10 && setup-datacards.py -i $(SETUPBBB2) -p 8TeV --a sm 25-80:5 -c em --sm-categories-em "1 3 4" && touch $@
+	cd $(BASE)  && $(WD)/add_bbb_errors_VH.py -f 'em:8TeV:01:Fakes,DYlow' -i $(SETUP1) -o $(SETUPBBB) --threshold 0.10 && $(WD)/add_bbb_errors_VH.py -f 'em:8TeV:03,04:W,QCD,ZTT_lowMass' -i $(SETUPBBB) -o $(SETUPBBB2) --threshold 0.10 && setup-datacards.py -i $(SETUPBBB2) -p 8TeV --a sm 25_80:5 -c em --sm-categories-em "1 3 4" && touch $@
 	#cd $(BASE)  && $(WD)/add_bbb_errors_VH.py -f 'em:8TeV:01,02:Fakes,Ztt,ttbar,EWK' -i $(SETUP1) -o $(SETUPBBB) --threshold 0.10 --normalize && setup-datacards.py -i $(SETUPBBB) -p 8TeV --a sm 25-80:5 -c em --sm-categories-em "1 2" && touch $@
 
 zh: $(CARDS)/.zh8_timestamp
@@ -57,7 +57,7 @@ cards: zh
 
 $(LIMITDIR)/.timestamp: $(CARDS)/.zh8_timestamp 
 	rm -rf $(LIMITDIR)
-	cd $(BASE) && $(WD)/setup_htt_channels.py -o $(LIMITDIR) -c em --sm-categories-em "1 3 4" -p 8TeV 25-80:5 && touch $@
+	cd $(BASE) && $(WD)/setup_htt_channels.py -o $(LIMITDIR) -c em --sm-categories-em "1 3 4" -p 8TeV 25_80:5 && touch $@
 
 limitdir: $(LIMITDIR)/.timestamp
 
@@ -98,7 +98,7 @@ $(HTT_TEST)/root_postfit/.timestamp: $(HTT_TEST)/.fit_timestamp
         #  --verbose
 	touch $@
 
-plots/.mass_timestamp: $(HTT_TEST)/root_postfit/.timestamp pas_plots.py
+plots/.mass_timestamp: $(HTT_TEST)/root_postfit/.timestamp
 	rm -rf plots
 	mkdir -p plots
 	python VH_massplots.py --prefit --period 8TeV --MLfit all
