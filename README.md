@@ -10,11 +10,16 @@ Install the HiggsToTauTau limit package,
 
 
 ```shell
-export SCRAM_ARCH=slc5_amd64_gcc472
-cmsrel CMSSW_6_1_1
-cd CMSSW_6_1_1/src/
+setenv SCRAM_ARCH slc6_amd64_gcc481
+cmsrel CMSSW_7_1_5 ### must be a 7_1_X release  >= 7_1_5;  (7.0.X and 7.2.X are NOT supported either) 
+cd CMSSW_7_1_5/src 
 cmsenv
 git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+cd HiggsAnalysis/CombinedLimit
+git fetch origin
+git checkout v5.0.1
+scramv1 b clean; scramv1 b # always make a clean build
+cd ../..
 git clone https://github.com/cms-analysis/HiggsAnalysis-HiggsToTauTau.git HiggsAnalysis/HiggsToTauTau
 git clone https://github.com/roger-wolf/HiggsAnalysis-HiggsToTauTau-auxiliaries.git auxiliaries
 scram b -j 4; rehash
