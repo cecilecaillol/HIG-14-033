@@ -1,14 +1,11 @@
 ###########################################################################
 # unc.vals: specification of uncertainty values by category, sample, and uncertainty name
-eleTau_btag		signal,SM,ZTT_lowMass	            	lumi_8TeV            			1.026
-eleTau_btag		signal,ZTT,ZL,ZJ,TT,VV,ZTT_lowMass  	CMS_eff_e 				1.02
-eleTau_btag		signal,ZTT,VV,ZTT_lowMass       	CMS_eff_t_etau_8TeV			1.08
-eleTau_btag		signal,ZTT,ZTT_lowMass			CMS_scale_t_etau_8TeV         		1.00
-#eleTau_btag      	TT			  		CMS_scale_j_8TeV 			0.92
-#eleTau_btag      	VV		  			CMS_scale_j_8TeV 			0.98
-#eleTau_btag      	ZL,ZJ		  			CMS_scale_j_8TeV 			0.98
+eleTau_btag		VV,ZL,ZJ,signal,SM,ZTT,ZTT_lowMass	lumi_8TeV            			1.026
+eleTau_btag		signal,ZTT,ZL,ZJ,VV,TT,ZTT_lowMass  	CMS_eff_e 				1.02
+eleTau_btag		signal,ZTT,VV,TT,W,SM,ZTT_lowMass	CMS_eff_t_etau_8TeV			1.08
+eleTau_btag		signal,ZTT,VV,TT,W,SM,ZTT_lowMass	CMS_scale_t_etau_8TeV         		1.00
 eleTau_btag      	signal,SM                          	CMS_htt_scale_met_8TeV			0.99
-eleTau_btag      	TT,W,ZL,ZJ,ZTT_lowMass	  		CMS_htt_scale_met_8TeV			1.01
+eleTau_btag      	TT,VV,W,ZL,ZJ,ZTT_lowMass	  	CMS_htt_scale_met_8TeV			1.01
 eleTau_btag		ZL,signal      				CMS_eff_b_8TeV                  	1.02
 eleTau_btag		ZJ,TT,VV       				CMS_eff_b_8TeV                  	1.04
 eleTau_btag             SM	                                CMS_eff_b_8TeV                          1.01
@@ -16,7 +13,8 @@ eleTau_btag		TT,VV        				CMS_fake_b_8TeV                 	1.01
 eleTau_btag		ZL        				CMS_fake_b_8TeV                 	1.02
 eleTau_btag		ZJ        				CMS_fake_b_8TeV                 	1.09
 eleTau_btag             SM                                      CMS_fake_b_8TeV                         1.03
-eleTau_btag		ZTT,ZL,ZJ,ZTT_lowMass  			CMS_htt_zttNorm_8TeV 			1.03
+eleTau_btag		ZTT,ZL,ZJ          			CMS_htt_zttNorm_8TeV 			1.03
+eleTau_btag             ZTT_lowMass                             CMS_htt_zttLowMassNorm_8TeV             1.10
 eleTau_btag		TT     		  			CMS_htt_ttbarNorm_8TeV 			1.10
 eleTau_btag	 	VV	          			CMS_htt_DiBosonNorm_8TeV 		1.15
 eleTau_btag		W	          			CMS_htt_WNorm_etau_btag_8TeV 		1.30
@@ -29,12 +27,17 @@ eleTau_btag		TT					CMS_htt_ttbarJetFake_8TeV		1.00
 eleTau_btag	        W					CMS_htt_WShape_etau_btag_8TeV           1.00
 eleTau_btag		QCD					CMS_htt_QCDfrShape_etau_8TeV		1.00
 eleTau_btag             SM                      	        CMS_htt_SM125_mu                        1.30
-eleTau_btag             ggH_SM125                     		pdf_gg                                  1.097
+eleTau_btag             ggH_SM125               		pdf_gg                                  1.097
+eleTau_btag             signal		                        pdf_gg                                  1.10
 eleTau_btag             qqH_SM125                       	pdf_qqbar                               1.036
 eleTau_btag             VH_SM125                        	pdf_qqbar                               1.04
-eleTau_btag             ggH_SM125                       	QCDscale_ggH                            1.105
+eleTau_btag             ggH_SM125	                      	QCDscale_ggH                            1.105
+eleTau_btag             signal		                        QCDscale_bbA                            1.10
 eleTau_btag             qqH_SM125                      		QCDscale_qqH                            1.015
 eleTau_btag             VH_SM125                        	QCDscale_VH                             1.04
 eleTau_btag             qqH_SM125,VH_SM125              	UEPS                                    1.007
 eleTau_btag             ggH_SM125                       	UEPS                                    0.946
+eleTau_btag		signal,ZTT,VV,TT,W,SM,ZTT_lowMass 	CMS_trgUnc_tau_etau_8TeV		1.0
+eleTau_btag             signal,ZTT,VV,TT,W,SM,ZTT_lowMass       CMS_trgUnc_lep_etau_8TeV                1.0
+eleTau_btag		signal					NLOvsLO					1.20
 

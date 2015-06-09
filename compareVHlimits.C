@@ -19,7 +19,7 @@
 #include "/afs/cern.ch/work/c/ccaillol/VH_HIG-13-004/CMSSW_6_1_1/src/HiggsAnalysis/HiggsToTauTau/interface/HttStyles.h"
 #include "/afs/cern.ch/work/c/ccaillol/VH_HIG-13-004/CMSSW_6_1_1/src/HiggsAnalysis/HiggsToTauTau/src/HttStyles.cc"
 
-static const double MARKER_SIZE = 1.3;  // 0.7
+static const double MARKER_SIZE = 1.5;  // 0.7
 
 bool
 channel(std::string& label){
@@ -69,12 +69,43 @@ void compareVHlimits(const char* filename, const char* channelstr, bool expected
   colors["emu_nobtag"          ] = kOrange+7;
   colors["muTau_nobtag"          ] = kCyan+2;
   colors["eleTau_nobtag"          ] = kBlue+1;
-  colors["emu"         ] = kGreen-1;
-  colors["etau"         ] = kOrange-5;
-  colors["mutau"         ] = kRed-4;
+  colors["emu"         ] = kViolet-6;
+  colors["etau"         ] = kGreen+2;
+  colors["mutau"         ] = kPink+7;
   colors["btag"         ] = kCyan+3;
   colors["nobtag"          ] = kRed;
   colors["ett"          ] = kBlue-4;
+
+  std::map<std::string, unsigned int> styles;
+  styles["emu_btag"      ] = 11;
+  styles["eleTau_btag"  ] = 11;
+  styles["muTau_btag"      ] = 11;
+  styles["cmb"          ] = 11;
+  styles["emu_nobtag"          ] = 11;
+  styles["muTau_nobtag"          ] = 11;
+  styles["eleTau_nobtag"          ] = 11;
+  styles["emu"         ] = 11;
+  styles["etau"         ] = 11;
+  styles["mutau"         ] =11;
+  styles["btag"         ] = 11;
+  styles["nobtag"          ] = 11;
+  styles["ett"          ] = 11;
+
+  std::map<std::string, unsigned int> markers;
+  markers["emu_btag"      ] = 20;
+  markers["eleTau_btag"  ] = 20;
+  markers["muTau_btag"      ] = 20;
+  markers["cmb"          ] = 22;
+  markers["emu_nobtag"          ] = 20;
+  markers["muTau_nobtag"          ] = 20;
+  markers["eleTau_nobtag"          ] = 20;
+  markers["emu"         ] = 21;
+  markers["etau"         ] = 20;
+  markers["mutau"         ] = 23;
+  markers["btag"         ] = 20;
+  markers["nobtag"          ] = 20;
+  markers["ett"          ] = 20;
+
 
   std::cout << " *******************************************************************************************************\n"
 	    << " * Usage     : root -l                                                                                  \n"
@@ -139,7 +170,7 @@ void compareVHlimits(const char* filename, const char* channelstr, bool expected
 	x_title = std::string("m_{#phi} [GeV]");
       }
       else{
-	x_title = std::string("m_{a1} [GeV]");
+	x_title = std::string("m_{A} [GeV]");
       }
       hexp[i]->GetXaxis()->SetTitle(x_title.c_str());
       hexp[i]->GetXaxis()->SetLabelFont(62);
@@ -166,10 +197,10 @@ void compareVHlimits(const char* filename, const char* channelstr, bool expected
       hexp[i]->GetYaxis()->SetLabelSize(0.03);
       hexp[i]->GetXaxis()->SetLimits(hexp[i]->GetX()[0]-.1, hexp[i]->GetX()[hexp[i]->GetN()-1]+.1);
     }
-    hexp[i]->SetLineStyle(11.);
+    hexp[i]->SetLineStyle(styles.find(channels[i])->second);
     hexp[i]->SetLineWidth( 3.); 
     hexp[i]->SetLineColor(colors.find(channels[i])->second);
-    hexp[i]->SetMarkerStyle(20);
+    hexp[i]->SetMarkerStyle(markers.find(channels[i])->second);
     hexp[i]->SetMarkerSize(MARKER_SIZE);
     hexp[i]->SetMarkerColor(colors.find(channels[i])->second);
     hexp[i]->Draw(firstPlot ? "APL" : "PLsame");
@@ -195,7 +226,7 @@ void compareVHlimits(const char* filename, const char* channelstr, bool expected
 	x_title = std::string("m_{#phi} [GeV]");
       }
       else{
-	x_title = std::string("m_{a1} [GeV]");
+	x_title = std::string("m_{A} [GeV]");
       }
       hobs[i]->GetXaxis()->SetTitle(x_title.c_str());
       hobs[i]->GetXaxis()->SetLabelFont(62);
@@ -222,7 +253,7 @@ void compareVHlimits(const char* filename, const char* channelstr, bool expected
       hobs[i]->GetYaxis()->SetLabelSize(0.03);
       hobs[i]->GetXaxis()->SetLimits(hobs[i]->GetX()[0]-.1, hobs[i]->GetX()[hobs[i]->GetN()-1]+.1);
     }
-    hobs[i]->SetLineStyle(11.);
+    hobs[i]->SetLineStyle(styles.find(channels[i])->second);
     hobs[i]->SetLineWidth( 3.); 
     hobs[i]->SetLineColor(colors.find(channels[i])->second);
     hobs[i]->SetMarkerStyle(20);
@@ -277,26 +308,55 @@ void compareVHlimits(const char* filename, const char* channelstr, bool expected
     if(expected && observed){
       /// setup the CMS Preliminary
       if(std::string(type) == std::string("mssm-tanb")){
-	CMSPrelim(label, "", 0.15, 0.835);
+	//CMSPrelim(label, "", 0.15, 0.835);
 	leg0 = new TLegend(legendOnRight ? 0.60 : 0.20, hexp.size()<5 ? 0.20-0.06*hexp.size() : 0.4, legendOnRight ? 0.94 : 0.63, 0.20);
       }
       else{
-	CMSPrelim(label, "", 0.15, 0.835);
+	//CMSPrelim(label, "", 0.15, 0.835);
 	leg0 = new TLegend(legendOnRight ? 0.20 : 0.20, hexp.size()<5 ? 0.75-0.08*hexp.size() : 0.6, legendOnRight ? 0.94 : 0.63, 0.75);
       }
     }
     else{
       /// setup the CMS Preliminary
       if(std::string(type) == std::string("mssm-tanb")){
-	CMSPrelim(label, "", 0.15, 0.835);
+	//CMSPrelim(label, "", 0.15, 0.835);
 	leg0 = new TLegend(legendOnRight?0.60:0.20, hexp.size()<5 ? (legendOnTop?0.90:0.40)-0.04*hexp.size() : (legendOnTop?0.6:0.2), legendOnRight?0.94:0.45, (legendOnTop?0.90:0.40));
 	   }
       else{
-	CMSPrelim(label, "", 0.15, 0.835);
+	//CMSPrelim(label, "", 0.15, 0.835);
 	leg0 = new TLegend(legendOnRight ? 0.50 : 0.20, hexp.size()<5 ? 0.90-0.06*hexp.size() : 0.6, legendOnRight ? 0.94 : 0.63, 0.90);
 	//leg0 = new TLegend(legendOnRight ? 0.50 : 0.20, hexp.size()<5 ? 0.90-0.08*hexp.size() : 0.6, legendOnRight ? 0.94 : 0.80, 0.90);
       }
     }
+    TPaveText* lumi  = new TPaveText(0.21, 0.77+0.06, 0.21+0.15, 0.77+0.16, "NDC");
+    lumi->SetTextFont(61);
+    lumi->SetTextSize(0.04);
+    lumi->SetBorderSize(   0 );
+    lumi->SetFillStyle(    0 );
+    lumi->SetTextAlign(   12 );
+    lumi->SetTextColor(    1 );
+    lumi->AddText("CMS");
+    lumi->Draw();
+
+    TPaveText* lumi2  = new TPaveText(0.21, 0.73+0.06, 0.21+0.15, 0.73+0.16, "NDC");
+    lumi2->SetTextSize(0.03);
+    lumi2->SetBorderSize(   0 );
+    lumi2->SetFillStyle(    0 );
+    lumi2->SetTextAlign(   12 );
+    lumi2->SetTextColor(    1 );
+    lumi2->SetTextFont(52);
+    lumi2->AddText("Preliminary");
+    lumi2->Draw();
+
+    TPaveText* lumi3  = new TPaveText(0.74, 0.835+0.06, 0.74+0.30, 0.835+0.16, "NDC");
+    lumi3->SetBorderSize(   0 );
+    lumi3->SetFillStyle(    0 );
+    lumi3->SetTextAlign(   12 );
+    lumi3->SetTextColor(    1 );
+    lumi3->SetTextSize(0.03);
+    lumi3->AddText("19.7 fb^{-1} (8 TeV)");
+    lumi3->Draw();
+
     if(std::string(type) == std::string("mssm-tanb")) {leg0->SetTextSize(0.03);}
     leg0->SetBorderSize( 0 );
     leg0->SetFillStyle ( 1001 );

@@ -15,7 +15,7 @@ NUMPROCS=$2
 
 rm -f limits/$TYPE/.limits_computed
 
-if ls -d limits/$TYPE/* | xargs -n 1 -P $NUMPROCS limit.py --asymptotic --expectedOnly --no-prefit
+if ls -d limits/$TYPE/* | xargs -n 1 -P $NUMPROCS limit.py --asymptotic #--expectedOnly --no-prefit
 then touch limits/.limits_computed
 else exit 1
 fi

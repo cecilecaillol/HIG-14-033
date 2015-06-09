@@ -55,26 +55,29 @@ def rebin_data_dN(graph,hist):
 def text_channel(canal):   
    """ Writes channel name """
    subchannels_left=['em']
-   chan     = ROOT.TPaveText(0.22, 0.76+0.013, 0.44, 0.76+0.155, "NDC")
+   #chan     = ROOT.TPaveText(0.22, 0.76+0.013, 0.44, 0.76+0.155, "NDC")
+   #chan     = ROOT.TPaveText(0.22, 0.68+0.013, 0.46, 0.68+0.155, "NDC")
+   chan     = ROOT.TPaveText(0.80, 0.77+0.013, 0.90, 0.77+0.155, "NDC")#droite
+   #chan     = ROOT.TPaveText(0.68, 0.76+0.013, 0.90, 0.76+0.155, "NDC")
    chan.SetBorderSize(   0 )
    chan.SetFillStyle(    0 )
    chan.SetTextAlign(   12 )
-   chan.SetTextSize ( 0.05 )
+   chan.SetTextSize ( 0.04 )
    chan.SetTextColor(    1 )
    chan.SetTextFont (   62 )
    texte=' '
-   if canal=='emu_nobtag':
-	 texte='e#mu no-btag'
    if canal=='emu_btag':
-         texte='e#mu btag'
+	 texte='e#mu'
+   if canal=='emu_btag':
+         texte='e#mu'
    if canal=='muTau_btag':
-         texte='#mu#tau btag'
+         texte='#mu#tau_{h}'
    if canal=='muTau_nobtag':
-         texte='#mu#tau no-btag'
+         texte='#mu#tau'
    if canal=='eleTau_btag':
-         texte='e#tau btag'
+         texte='e#tau_{h}'
    if canal=='eleTau_nobtag':
-         texte='e#tau no-btag'
+         texte='e#tau'
    chan.AddText(texte)
    return chan
 
@@ -94,9 +97,47 @@ def fix_maximum(channel_dict, type):
         #print bin, upper, max
         #if  U > max:
         #    max = U
-    channel_dict['stack'].SetMaximum(cushion*max*10)
+    channel_dict['stack'].SetMaximum(cushion*max/3)
     #if type=="ZH":
     #    channel_dict['stack'].SetMaximum(cushion * max/20)
+
+def add_lumi():
+    lowX=0.64
+    lowY=0.835
+    lumi  = ROOT.TPaveText(lowX, lowY+0.06, lowX+0.30, lowY+0.16, "NDC")
+    lumi.SetBorderSize(   0 )
+    lumi.SetFillStyle(    0 )
+    lumi.SetTextAlign(   12 )
+    lumi.SetTextColor(    1 )
+    lumi.SetTextSize(0.045)
+    lumi.AddText("19.7 fb^{-1} (8 TeV)")
+    return lumi
+
+def add_CMS():
+    lowX=0.21
+    lowY=0.75
+    lumi  = ROOT.TPaveText(lowX, lowY+0.06, lowX+0.15, lowY+0.16, "NDC")
+    lumi.SetTextFont(61)
+    lumi.SetTextSize(0.06)
+    lumi.SetBorderSize(   0 )
+    lumi.SetFillStyle(    0 )
+    lumi.SetTextAlign(   12 )
+    lumi.SetTextColor(    1 )
+    lumi.AddText("CMS")
+    return lumi 
+
+def add_Preliminary():
+    lowX=0.21
+    lowY=0.73
+    lumi  = ROOT.TPaveText(lowX, lowY+0.06, lowX+0.15, lowY+0.16, "NDC")
+    lumi.SetTextSize(0.03)
+    lumi.SetBorderSize(   0 )
+    lumi.SetFillStyle(    0 )
+    lumi.SetTextAlign(   12 )
+    lumi.SetTextColor(    1 )
+    lumi.SetTextFont(52)
+    lumi.AddText("Preliminary")
+    return lumi 
 
 def add_cms_blurb(sqrts, intlumi, preliminary=False, blurb=''):
     """ Add a CMS blurb to a plot """
@@ -125,6 +166,13 @@ _styles = {
         # Same as Z+jets
         'fillstyle': 1001,
         'fillcolor': ROOT.TColor.GetColor(248,206,104),
+        'linecolor': ROOT.EColor.kBlack,
+        'linewidth': 3,
+    },
+    "low": {
+        # Same as Z+jets
+        'fillstyle': 1001,
+        'fillcolor': ROOT.TColor.GetColor(148,106,4),
         'linecolor': ROOT.EColor.kBlack,
         'linewidth': 3,
     },
@@ -163,9 +211,17 @@ _styles = {
         'linecolor': ROOT.EColor.kBlue,
         'name': "VH",
     },
+    "signal2": {
+        'fillcolor': 0,
+        'fillstyle': 0,
+        'linestyle': 11,
+        'linewidth': 3,
+        'linecolor': ROOT.EColor.kGreen,
+        'name': "VH",
+    },
     "data": {
         'markerstyle': 20,
-        'markersize': 2,
+        'markersize': 1,
         'linewidth': 3,
         'markercolor': ROOT.EColor.kBlack,
         'legendstyle': 'pe',
@@ -207,9 +263,9 @@ def get_combined_histogram(histograms, directories, files, title=None,
                        output = th1.Clone()
                    else :
                        output.Add(th1)
-                   if histogram=="data_obs":
-                            for i in range(1,14):#partial blinding
-                                 output.SetBinContent(i,-100)
+                   #if histogram=="data_obs":
+                   #         for i in range(1,14):#partial blinding
+                   #              output.SetBinContent(i,-100)
     if scale is not None:
         output.Scale(scale)
     if title is not None:
@@ -265,7 +321,7 @@ if __name__ == "__main__":
     yields = {}
 
     emu_subplots = {
-        #'emu_nobtag': ['emu_nobtag'],
+        #'emu_btag': ['emu_btag'],
         'emu_btag': ['emu_btag'],
     }
     etau_subplots = {
@@ -276,13 +332,13 @@ if __name__ == "__main__":
         #'muTau_nobtag': ['muTau_nobtag'],
         'muTau_btag': ['muTau_btag'],
     }
-    num_bins_emu=15
+    num_bins_emu=10#15
     # ZH
     #histograms['emu'] = {}
     #yields['emu']={}
     #yield_errors['emu'] = {}
     #emu_channels = [
-    #    'emu_nobtag','emu_btag',
+    #    'emu_btag','emu_btag',
     #]
     emu_channels = [
         'emu_btag',
@@ -306,6 +362,12 @@ if __name__ == "__main__":
         integrale=emu_plots['ztt'].IntegralAndError(1,num_bins_emu,erreur)
         emu_integrales['ztt']=float(integrale)
         emu_erreurs['ztt']=float(erreur)
+
+        emu_plots['low'] = get_combined_histogram(['DYlow'], channel_subset, files_to_use_emu, title='low',style='low')
+        erreur=ROOT.Double(0)
+        integrale=emu_plots['low'].IntegralAndError(1,num_bins_emu,erreur)
+        emu_integrales['low']=float(integrale)
+        emu_erreurs['low']=float(erreur)
 
         emu_plots['fakes'] = get_combined_histogram(
             'Fakes', channel_subset, files_to_use_emu, title='Reducible bkg.',
@@ -331,9 +393,15 @@ if __name__ == "__main__":
         emu_erreurs['hww']=float(erreur)
 
         emu_plots['signal'] = get_combined_histogram(
-            'bba140', channel_subset, files_to_use_emu,
-            title='m_{a1}=40 GeV', style='signal',
+            'bba135', channel_subset, files_to_use_emu,
+            title='m_{a1}=35 GeV', style='signal',
         )
+
+        emu_plots['signal2'] = get_combined_histogram(
+            'bba130', channel_subset, files_to_use_emu,
+            title='m_{a1}=30 GeV', style='signal2',
+        )
+
         integrale=emu_plots['signal'].IntegralAndError(1,num_bins_emu,erreur)
         emu_integrales['signal']=float(integrale)
         emu_erreurs['signal']=float(erreur)
@@ -341,6 +409,7 @@ if __name__ == "__main__":
             'data_obs', channel_subset, files_to_use_emu,
             title='data', style='data',
         )
+        #emu_plots['data'].GetXaxis().SetRangeUser(0,50)
         integrale=emu_plots['data'].IntegralAndError(1,num_bins_emu,erreur)
         emu_integrales['data']=float(integrale)
         emu_erreurs['data']=float(erreur)
@@ -350,12 +419,17 @@ if __name__ == "__main__":
         emu_plots['stack'].Add(rebin_dN(emu_plots['EWK']), 'hist')
         emu_plots['stack'].Add(rebin_dN(emu_plots['ttbar']), 'hist')
         emu_plots['stack'].Add(rebin_dN(emu_plots['ztt']), 'hist')
-	emu_plots['signal'].Scale(50) #Signal scaling !!!!!!!!!
+        #emu_plots['stack'].Add(rebin_dN(emu_plots['low']), 'hist')
+	emu_plots['signal'].Scale(40) #Signal scaling !!!!!!!!!
+        emu_plots['signal2'].Scale(40)
+        emu_plots['stack2']=emu_plots['stack'].Clone()
         emu_plots['stack'].Add(rebin_dN(emu_plots['signal']), 'hist')
+        emu_plots['stack2'].Add(rebin_dN(emu_plots['signal2']), 'hist')
 
 
         errorZH=emu_plots['ztt'].Clone()
         errorZH.SetFillStyle(3013)
+        #errorZH.Add(emu_plots['low'])
         errorZH.Add(emu_plots['fakes'])
         errorZH.Add(emu_plots['ttbar'])
         errorZH.Add(emu_plots['EWK'])
@@ -372,7 +446,8 @@ if __name__ == "__main__":
         emu_plots['data'].SetMarkerSize(2)
 	#emu_plots['data_rebin']=rebin_dN(emu_plots['data'])
 	def make_legend():
-            output = ROOT.TLegend(0.60, 0.65, 0.92, 0.90, "", "brNDC")
+            #output = ROOT.TLegend(0.60, 0.65, 0.92, 0.90, "", "brNDC")
+	    output = ROOT.TLegend(0.22, 0.55, 0.54, 0.80, "", "brNDC")
             output.SetLineWidth(0)
             output.SetLineStyle(0)
             output.SetFillStyle(0)
@@ -382,17 +457,18 @@ if __name__ == "__main__":
 
         emu_plots['legend'] = make_legend()
         emu_plots['legend'].AddEntry(emu_plots['signal'],
-                                        "a1(m=40 GeV, xs=50 pb)", "l")
+                                        "A (m=35 GeV, xs=40 pb)", "l")
+        #emu_plots['legend'].AddEntry(emu_plots['signal2'],
+        #                                "a1(m=30 GeV, xs=40 pb)", "l")
         emu_plots['legend'].AddEntry(emu_plots['data'],
                                         "Observed", "lp")
-        emu_plots['legend'].AddEntry(emu_plots['hww'],
-                                        "SM H(125 GeV)", "f")
+        #emu_plots['legend'].AddEntry(emu_plots['hww'],
+        #                                "SM H(125 GeV)", "f")
+        #emu_plots['legend'].AddEntry(emu_plots['low'], "Z#rightarrow#tau#tau (low mass)", "f")
         emu_plots['legend'].AddEntry(emu_plots['ztt'], "Z#rightarrow#tau#tau", "f")
-        emu_plots['legend'].AddEntry(emu_plots['fakes'],
-                                        "Fakes", "f")
         emu_plots['legend'].AddEntry(emu_plots['ttbar'], "t#bar{t}", "f")
-        emu_plots['legend'].AddEntry(emu_plots['EWK'],
-                                        "EWK", "f")
+        emu_plots['legend'].AddEntry(emu_plots['EWK'],"EWK", "f")
+        emu_plots['legend'].AddEntry(emu_plots['fakes'],"Fakes", "f")
         if args.prefit==False:
            emu_plots['legend'].AddEntry(errorZH, "Bkg. uncertainty", "F")
 
@@ -426,6 +502,12 @@ if __name__ == "__main__":
         etau_integrales['ztt']=float(integrale)
         etau_erreurs['ztt']=float(erreur)
 
+        etau_plots['low'] = get_combined_histogram(['ZTT_lowMass'], channel_subset, files_to_use_emu, title='low',style='low')
+        erreur=ROOT.Double(0)
+        integrale=etau_plots['low'].IntegralAndError(1,num_bins_emu,erreur)
+        etau_integrales['low']=float(integrale)
+        etau_erreurs['low']=float(erreur)
+
         etau_plots['fakes'] = get_combined_histogram('QCD', channel_subset, files_to_use_emu, title='Reducible bkg.',
             style='fakes'
         )
@@ -449,8 +531,12 @@ if __name__ == "__main__":
         etau_erreurs['hww']=float(erreur)
 
         etau_plots['signal'] = get_combined_histogram(
-            'bba140', channel_subset, files_to_use_emu,
+            'bba135', channel_subset, files_to_use_emu,
             title='m_{a1}=35 GeV', style='signal',
+        )
+        etau_plots['signal2'] = get_combined_histogram(
+            'bba130', channel_subset, files_to_use_emu,
+            title='m_{a1}=30 GeV', style='signal2',
         )
         integrale=etau_plots['signal'].IntegralAndError(1,num_bins_emu,erreur)
         etau_integrales['signal']=float(integrale)
@@ -468,11 +554,16 @@ if __name__ == "__main__":
         etau_plots['stack'].Add(rebin_dN(etau_plots['EWK']), 'hist')
         etau_plots['stack'].Add(rebin_dN(etau_plots['ttbar']), 'hist')
         etau_plots['stack'].Add(rebin_dN(etau_plots['ztt']), 'hist')
-        etau_plots['signal'].Scale(50) #Signal scaling !!!!!!!!!
+        #etau_plots['stack'].Add(rebin_dN(etau_plots['low']), 'hist')
+        etau_plots['signal'].Scale(40) #Signal scaling !!!!!!!!!
+        etau_plots['signal2'].Scale(40)
+        etau_plots['stack2']=etau_plots['stack'].Clone()
         etau_plots['stack'].Add(rebin_dN(etau_plots['signal']), 'hist')
+        etau_plots['stack2'].Add(rebin_dN(etau_plots['signal2']), 'hist')
 
         errorETAU=etau_plots['ztt'].Clone()
         errorETAU.SetFillStyle(3013)
+        #errorETAU.Add(etau_plots['low'])
         errorETAU.Add(etau_plots['fakes'])
         errorETAU.Add(etau_plots['ttbar'])
         errorETAU.Add(etau_plots['EWK'])
@@ -491,17 +582,20 @@ if __name__ == "__main__":
 
         etau_plots['legend'] = make_legend()
         etau_plots['legend'].AddEntry(etau_plots['signal'],
-                                        "a1(m=40 GeV, xs=50 pb)", "l")
+                                        "A (m=35 GeV, xs=40 pb)", "l")
+        #etau_plots['legend'].AddEntry(etau_plots['signal2'],
+        #                                "a1(m=30 GeV, xs=40 pb)", "l")
         etau_plots['legend'].AddEntry(etau_plots['data'],
                                         "Observed", "lp")
-        etau_plots['legend'].AddEntry(etau_plots['hww'],
-                                        "SM H(125 GeV)", "f")
+        #etau_plots['legend'].AddEntry(etau_plots['hww'],
+        #                                "SM H(125 GeV)", "f")
+        #etau_plots['legend'].AddEntry(etau_plots['low'], "Z#rightarrow#tau#tau (low mass)", "f")
         etau_plots['legend'].AddEntry(etau_plots['ztt'], "Z#rightarrow#tau#tau", "f")
-        etau_plots['legend'].AddEntry(etau_plots['fakes'],
-                                        "QCD", "f")
         etau_plots['legend'].AddEntry(etau_plots['ttbar'], "t#bar{t}", "f")
         etau_plots['legend'].AddEntry(etau_plots['EWK'],
                                         "EWK", "f")
+        etau_plots['legend'].AddEntry(etau_plots['fakes'],
+                                        "QCD", "f")
         if args.prefit==False:
            etau_plots['legend'].AddEntry(errorETAU, "Bkg. uncertainty", "F")
 
@@ -535,6 +629,12 @@ if __name__ == "__main__":
         mutau_integrales['ztt']=float(integrale)
         mutau_erreurs['ztt']=float(erreur)
 
+        mutau_plots['low'] = get_combined_histogram(['ZTT_lowMass'], channel_subset, files_to_use_emu, title='low',style='low')
+        erreur=ROOT.Double(0)
+        integrale=mutau_plots['low'].IntegralAndError(1,num_bins_emu,erreur)
+        mutau_integrales['low']=float(integrale)
+        mutau_erreurs['low']=float(erreur)
+
         mutau_plots['fakes'] = get_combined_histogram(
             'QCD', channel_subset, files_to_use_emu, title='Reducible bkg.',
             style='fakes'
@@ -560,8 +660,12 @@ if __name__ == "__main__":
         mutau_erreurs['hww']=float(erreur)
 
         mutau_plots['signal'] = get_combined_histogram(
-            'bba140', channel_subset, files_to_use_emu,
+            'bba135', channel_subset, files_to_use_emu,
             title='m_{a1}=35 GeV', style='signal',
+        )
+        mutau_plots['signal2'] = get_combined_histogram(
+            'bba130', channel_subset, files_to_use_emu,
+            title='m_{a1}=30 GeV', style='signal2',
         )
         integrale=mutau_plots['signal'].IntegralAndError(1,num_bins_emu,erreur)
         mutau_integrales['signal']=float(integrale)
@@ -579,11 +683,16 @@ if __name__ == "__main__":
         mutau_plots['stack'].Add(rebin_dN(mutau_plots['EWK']), 'hist')
         mutau_plots['stack'].Add(rebin_dN(mutau_plots['ttbar']), 'hist')
         mutau_plots['stack'].Add(rebin_dN(mutau_plots['ztt']), 'hist')
-        mutau_plots['signal'].Scale(50) #Signal scaling !!!!!!!!!
+        #mutau_plots['stack'].Add(rebin_dN(mutau_plots['low']), 'hist')
+        mutau_plots['stack2']=mutau_plots['stack'].Clone()
+        mutau_plots['signal'].Scale(40) #Signal scaling !!!!!!!!!
+        mutau_plots['signal2'].Scale(40)
         mutau_plots['stack'].Add(rebin_dN(mutau_plots['signal']), 'hist')
+        mutau_plots['stack2'].Add(rebin_dN(mutau_plots['signal2']), 'hist')
 
         errorMUTAU=mutau_plots['ztt'].Clone()
         errorMUTAU.SetFillStyle(3013)
+        #errorMUTAU.Add(mutau_plots['low'])
         errorMUTAU.Add(mutau_plots['fakes'])
         errorMUTAU.Add(mutau_plots['ttbar'])
         errorMUTAU.Add(mutau_plots['EWK'])
@@ -602,17 +711,20 @@ if __name__ == "__main__":
 
         mutau_plots['legend'] = make_legend()
         mutau_plots['legend'].AddEntry(mutau_plots['signal'],
-                                        "a1(m=40 GeV, xs=50 pb)", "l")
+                                        "A (m=35 GeV, xs=40 pb)", "l")
+        #mutau_plots['legend'].AddEntry(mutau_plots['signal2'],
+        #                                "a1(m=30 GeV, xs=40 pb)", "l")
         mutau_plots['legend'].AddEntry(mutau_plots['data'],
                                         "Observed", "lp")
-        mutau_plots['legend'].AddEntry(mutau_plots['hww'],
-                                        "SM H(125 GeV)", "f")
+        #mutau_plots['legend'].AddEntry(mutau_plots['hww'],
+        #                                "SM H(125 GeV)", "f")
+        #mutau_plots['legend'].AddEntry(mutau_plots['low'], "Z#rightarrow#tau#tau (low mass)", "f")
         mutau_plots['legend'].AddEntry(mutau_plots['ztt'], "Z#rightarrow#tau#tau", "f")
-        mutau_plots['legend'].AddEntry(mutau_plots['fakes'],
-                                        "QCD", "f")
         mutau_plots['legend'].AddEntry(mutau_plots['ttbar'], "t#bar{t}", "f")
         mutau_plots['legend'].AddEntry(mutau_plots['EWK'],
                                         "EWK", "f")
+        mutau_plots['legend'].AddEntry(mutau_plots['fakes'],
+                                        "QCD", "f")
         if args.prefit==False:
            mutau_plots['legend'].AddEntry(errorMUTAU, "Bkg. uncertainty", "F")
 
@@ -621,9 +733,10 @@ if __name__ == "__main__":
 	print channel
         histograms[channel]['poisson'] = convert(histograms[channel]['data'],set_zero_bins=-10)
         fix_maximum(histograms[channel],'ZH')
-        histograms[channel]['stack'].Draw()
-        histograms[channel]['stack'].GetYaxis().SetTitle("#bf{dN/dm_{#tau#tau} [GeV]}" )
+        histograms[channel]['stack'].Draw("")
+        histograms[channel]['stack'].GetYaxis().SetTitle("#bf{Events / GeV}")#("#bf{dN/dm_{#tau#tau} [1/GeV]}" )
         histograms[channel]['stack'].GetXaxis().SetTitle("#bf{m_{#tau#tau} [GeV]}")
+        histograms[channel]['stack2'].Draw("same")
 
     plot_suffix = "_%s_%s_%s.pdf" % (
         'prefit' if args.prefit else 'postfit',
@@ -641,13 +754,18 @@ if __name__ == "__main__":
     int_lumi, sqrts = blurb_map[args.period]
 
     canvas = MakeCanvas("asdf","asdf",800,800)
-    canvas.SetLogy()
+    #canvas.SetLogy()
 
     for emu_key in emu_subplots:
         histograms[emu_key]['stack'].Draw()
+        histograms[emu_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
+        histograms[emu_key]['stack'].Draw("same")
+	#histograms[emu_key]['stack'].Draw("axis same")
+        #histograms[emu_key]['stack2'].Draw("same")
         if args.prefit==False:
            histograms[emu_key]['error'].Draw("e2same")
         histograms[emu_key]['poisson'].SetMarkerStyle(20)
+        #histograms[emu_key]['poisson'].GetXaxis().SetRangeUser(0,50)
         histograms[emu_key]['poisson'].SetMarkerColor(ROOT.EColor.kBlack)
         histograms[emu_key]['poisson'].SetLineColor(ROOT.EColor.kBlack)
         histograms[emu_key]['poisson'].SetLineWidth(2)
@@ -656,7 +774,17 @@ if __name__ == "__main__":
         histograms[emu_key]['poisson_rebin'].Draw('pe same')
 	histograms[emu_key]['legend'].SetTextFont(62)
         histograms[emu_key]['legend'].Draw()
-        lumiBlurb=add_cms_blurb(sqrts, int_lumi)
+        #histograms[emu_key]['stack'].Draw("same")
+        #if args.prefit==False:
+        #   histograms[emu_key]['error'].Draw("e2same")
+
+        #lumiBlurb=add_cms_blurb(sqrts, int_lumi)
+        #lumiBlurb.Draw("same")
+        lumiBlurb1=add_CMS()
+        lumiBlurb1.Draw("same")
+        lumiBlurb2=add_Preliminary()
+        #lumiBlurb2.Draw("same")
+        lumiBlurb=add_lumi()
         lumiBlurb.Draw("same")
         channel_text=text_channel(emu_key)
         channel_text.Draw('same')
@@ -665,6 +793,10 @@ if __name__ == "__main__":
 
     for etau_key in etau_subplots:
         histograms[etau_key]['stack'].Draw()
+        histograms[etau_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
+        histograms[etau_key]['stack'].Draw("same")
+        #histograms[etau_key]['stack'].Draw("axis same")
+        #histograms[etau_key]['stack2'].Draw("same")
         if args.prefit==False:
            histograms[etau_key]['error'].Draw("e2same")
         histograms[etau_key]['poisson'].SetMarkerStyle(20)
@@ -676,7 +808,13 @@ if __name__ == "__main__":
         histograms[etau_key]['poisson_rebin'].Draw('pe same')
         histograms[etau_key]['legend'].SetTextFont(62)
         histograms[etau_key]['legend'].Draw()
-        lumiBlurb=add_cms_blurb(sqrts, int_lumi)
+        #lumiBlurb=add_cms_blurb(sqrts, int_lumi)
+        #lumiBlurb.Draw("same")
+        lumiBlurb1=add_CMS()
+        lumiBlurb1.Draw("same")
+        lumiBlurb2=add_Preliminary()
+        #lumiBlurb2.Draw("same")
+        lumiBlurb=add_lumi()
         lumiBlurb.Draw("same")
         channel_text=text_channel(etau_key)
         channel_text.Draw('same')
@@ -685,6 +823,10 @@ if __name__ == "__main__":
 
     for mutau_key in mutau_subplots:
         histograms[mutau_key]['stack'].Draw()
+        histograms[mutau_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
+        histograms[mutau_key]['stack'].Draw("same")
+        #histograms[mutau_key]['stack'].Draw("axis same")
+        #histograms[mutau_key]['stack2'].Draw("same")
         if args.prefit==False:
            histograms[mutau_key]['error'].Draw("e2same")
         histograms[mutau_key]['poisson'].SetMarkerStyle(20)
@@ -694,15 +836,55 @@ if __name__ == "__main__":
         histograms[mutau_key]['poisson'].SetMarkerSize(2)
         histograms[mutau_key]['poisson_rebin']=rebin_data_dN(histograms[mutau_key]['poisson'],histograms[mutau_key]['data'])
         histograms[mutau_key]['poisson_rebin'].Draw('pe same')
+	print mutau_key
         histograms[mutau_key]['legend'].SetTextFont(62)
         histograms[mutau_key]['legend'].Draw()
-        lumiBlurb=add_cms_blurb(sqrts, int_lumi)
+        #lumiBlurb=add_cms_blurb(sqrts, int_lumi)
+        #lumiBlurb.Draw("same")
+        lumiBlurb1=add_CMS()
+        lumiBlurb1.Draw("same")
+        lumiBlurb2=add_Preliminary()
+        #lumiBlurb2.Draw("same")
+        lumiBlurb=add_lumi()
         lumiBlurb.Draw("same")
         channel_text=text_channel(mutau_key)
         channel_text.Draw('same')
         canvas.SaveAs('plots/' + mutau_key + plot_suffix)
         canvas.SaveAs('plots/' + mutau_key + plot_suffix_png)
 
+################ Combined ##################
+
+    #histogramsCmb=ROOT.THStack("cmb_stack", "cmb_stack")
+    #histogramsCmb.Add(mutau_plots['fakes'])
+    #histogramsCmb.Add(etau_plots['fakes'])
+    #histogramsCmb.Add(emu_plots['fakes'])
+    #histogramsCmb.Add(mutau_plots['EWK'])
+    #histogramsCmb.Add(etau_plots['EWK'])
+    #histogramsCmb.Add(emu_plots['EWK'])
+    #histogramsCmb.Add(mutau_plots['ttbar'])
+    #histogramsCmb.Add(etau_plots['ttbar'])
+    #histogramsCmb.Add(emu_plots['ttbar'])
+    #histogramsCmb.Add(mutau_plots['ztt'])
+    #histogramsCmb.Add(etau_plots['ztt'])
+    #histogramsCmb.Add(emu_plots['ztt'])
+    #histogramsCmb.GetYaxis().SetTitle("#bf{dN/dm_{#tau#tau} [1/GeV]}" )
+    #histogramsCmb.GetXaxis().SetTitle("#bf{m_{#tau#tau} [GeV]}")
+    #histogramsCmb.GetHistogram().GetYaxis().SetRangeUser(0,0.2*histogramsCmb.GetMaximum())
+    #histogramsCmb.Draw()
+    #histogramsCmb.GetHistogram().GetYaxis().SetRangeUser(0,0.2*histogramsCmb.GetMaximum())
+    #histogramsCmb.GetHistogram().GetXaxis().SetRangeUser(0,50)
+    #histogramsCmb.Draw("same")
+    #histogramsD=histograms["muTau_btag"]['poisson']
+    #histogramsD.Add(histograms["eleTau_btag"]['poisson'])
+    #histogramsD.Add(histograms["emu_btag"]['poisson'])
+    #histogramsD.Draw('pe same')
+    #histograms["muTau_btag"]['legend'].Draw()
+    #lumiBlurb=add_cms_blurb(sqrts, int_lumi)
+    #lumiBlurb.Draw("same")
+    #channel_text=text_channel("Combined")
+    #channel_text.Draw('same')
+    #canvas.SaveAs('plots/cmb' + plot_suffix)
+    #canvas.SaveAs('plots/cmb' + plot_suffix_png)
 
     postfit="postfit"
     if args.prefit:
@@ -716,3 +898,7 @@ if __name__ == "__main__":
     text_file2.write('$\\Pgm\\Pgth btag & %.3f $\\pm %.3f & %.1f $\\pm$ %.1f & %.0f & %.3f \\\\ \n' %(yields['muTau_btag']['signal'],yield_errors['muTau_btag']['signal'],yields['muTau_btag']['fakes']+yields['muTau_btag']['ttbar']+yields['muTau_btag']['EWK']+yields['muTau_btag']['ztt'],(yield_errors['muTau_btag']['fakes']**2+yield_errors['muTau_btag']['EWK']**2+yield_errors['muTau_btag']['ttbar']**2+yield_errors['muTau_btag']['ztt']**2)**0.5,yields['muTau_btag']['data'],getSOverSplusB_EMu(histograms['muTau_btag']['signal'],histograms['muTau_btag']['fakes'],histograms['muTau_btag']['ztt'],histograms['muTau_btag']['ttbar'],histograms['muTau_btag']['EWK'])))
     text_file2.write('\\hline \n')
     text_file2.write('\\end{tabular} \n')
+
+    print yields['emu_btag']['signal'],yields['emu_btag']['ztt'],yields['emu_btag']['ttbar'],yields['emu_btag']['fakes'],yields['emu_btag']['EWK']
+    print yields['muTau_btag']['signal'],yields['muTau_btag']['ztt'],yields['muTau_btag']['ttbar'],yields['muTau_btag']['fakes'],yields['muTau_btag']['EWK']
+    print yields['eleTau_btag']['signal'],yields['eleTau_btag']['ztt'],yields['eleTau_btag']['ttbar'],yields['eleTau_btag']['fakes'],yields['eleTau_btag']['EWK']
