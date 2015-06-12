@@ -37,12 +37,12 @@ Copy the files:
 cp HIG-14-033/uncertainty_files/* HiggsAnalysis/HiggsToTauTau/setup/em/.
 cp HIG-14-033/root_file/*.root auxiliaries/shapes/VHTT/.
 cp HIG-14-033/postfit_right_errors.py HiggsAnalysis/HiggsToTauTau/test/postfit.py
-cp HIG-14-033/sm_em*.py HiggsAnalysis/HiggsToTauTau/python/layouts/.
+cp HIG-14-033/layouts/*.py HiggsAnalysis/HiggsToTauTau/python/layouts/.
 ```
 
 Changes to HiggsTauTau package:
 
-Extend mass range in setup-datacard.py (line 129), cvs2local.py (line 162). In python/utils.py (line 237):
+Extend mass range in setup-datacards.py (line 129), cvs2local.py (line 162). In python/utils.py (line 237):
 
 ```shell
         'em' : {

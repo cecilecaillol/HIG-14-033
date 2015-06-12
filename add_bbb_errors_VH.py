@@ -35,6 +35,8 @@ import subprocess
 import sys
 import re
 
+os.environ['TERM'] = 'vt100'
+
 def get_channel_dirs(finalstate, category):
     ''' Turn 'mt' + 00 -> muTau_0jet_low '''
     fs_map = {

@@ -17,7 +17,7 @@ from sobWeightedCombine import *
 import ROOT
 
 ROOT.gROOT.SetBatch(True)
-ROOT.gROOT.ProcessLine('.x tdrStyle.C')
+#ROOT.gROOT.ProcessLine('.x tdrStyle.C')
 postfit_src = os.path.join(os.environ['CMSSW_BASE'],
                            'src/HiggsAnalysis/HiggsToTauTau/test/',
                            'root_postfit')
@@ -56,8 +56,8 @@ def text_channel(canal):
    """ Writes channel name """
    subchannels_left=['em']
    #chan     = ROOT.TPaveText(0.22, 0.76+0.013, 0.44, 0.76+0.155, "NDC")
-   #chan     = ROOT.TPaveText(0.22, 0.68+0.013, 0.46, 0.68+0.155, "NDC")
-   chan     = ROOT.TPaveText(0.80, 0.77+0.013, 0.90, 0.77+0.155, "NDC")#droite
+   chan     = ROOT.TPaveText(0.22, 0.68+0.013, 0.46, 0.68+0.155, "NDC")
+   #chan     = ROOT.TPaveText(0.80, 0.77+0.013, 0.90, 0.77+0.155, "NDC")#droite
    #chan     = ROOT.TPaveText(0.68, 0.76+0.013, 0.90, 0.76+0.155, "NDC")
    chan.SetBorderSize(   0 )
    chan.SetFillStyle(    0 )
@@ -97,7 +97,7 @@ def fix_maximum(channel_dict, type):
         #print bin, upper, max
         #if  U > max:
         #    max = U
-    channel_dict['stack'].SetMaximum(cushion*max/3)
+    channel_dict['stack'].SetMaximum(cushion*max/1)
     #if type=="ZH":
     #    channel_dict['stack'].SetMaximum(cushion * max/20)
 
@@ -446,8 +446,8 @@ if __name__ == "__main__":
         emu_plots['data'].SetMarkerSize(2)
 	#emu_plots['data_rebin']=rebin_dN(emu_plots['data'])
 	def make_legend():
-            #output = ROOT.TLegend(0.60, 0.65, 0.92, 0.90, "", "brNDC")
-	    output = ROOT.TLegend(0.22, 0.55, 0.54, 0.80, "", "brNDC")
+            output = ROOT.TLegend(0.60, 0.65, 0.92, 0.90, "", "brNDC")
+	    #output = ROOT.TLegend(0.22, 0.55, 0.54, 0.80, "", "brNDC")
             output.SetLineWidth(0)
             output.SetLineStyle(0)
             output.SetFillStyle(0)
@@ -758,8 +758,8 @@ if __name__ == "__main__":
 
     for emu_key in emu_subplots:
         histograms[emu_key]['stack'].Draw()
-        histograms[emu_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
-        histograms[emu_key]['stack'].Draw("same")
+        #histograms[emu_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
+        #histograms[emu_key]['stack'].Draw("same")
 	#histograms[emu_key]['stack'].Draw("axis same")
         #histograms[emu_key]['stack2'].Draw("same")
         if args.prefit==False:
@@ -793,8 +793,8 @@ if __name__ == "__main__":
 
     for etau_key in etau_subplots:
         histograms[etau_key]['stack'].Draw()
-        histograms[etau_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
-        histograms[etau_key]['stack'].Draw("same")
+        #histograms[etau_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
+        #histograms[etau_key]['stack'].Draw("same")
         #histograms[etau_key]['stack'].Draw("axis same")
         #histograms[etau_key]['stack2'].Draw("same")
         if args.prefit==False:
@@ -823,8 +823,8 @@ if __name__ == "__main__":
 
     for mutau_key in mutau_subplots:
         histograms[mutau_key]['stack'].Draw()
-        histograms[mutau_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
-        histograms[mutau_key]['stack'].Draw("same")
+        #histograms[mutau_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
+        #histograms[mutau_key]['stack'].Draw("same")
         #histograms[mutau_key]['stack'].Draw("axis same")
         #histograms[mutau_key]['stack2'].Draw("same")
         if args.prefit==False:
