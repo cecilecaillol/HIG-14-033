@@ -50,19 +50,21 @@ def rebin_data_dN(graph,hist):
         output.SetPoint(bin, output.GetX()[bin], output.GetY()[bin]/ref.GetBinWidth(bin+1))
         output.SetPointEYhigh(bin, output.GetErrorYhigh(bin)/ref.GetBinWidth(bin+1))
         output.SetPointEYlow(bin, output.GetErrorYlow(bin)/ref.GetBinWidth(bin+1))
+        if (output.GetY()[bin]<0):
+           output.SetPoint(bin, output.GetX()[bin], 0)
+           output.SetPointEYhigh(bin, 1.8/ref.GetBinWidth(bin))
+           output.SetPointEYlow(bin, 0)
     return output
 
 def text_channel(canal):   
    """ Writes channel name """
    subchannels_left=['em']
-   #chan     = ROOT.TPaveText(0.22, 0.76+0.013, 0.44, 0.76+0.155, "NDC")
-   chan     = ROOT.TPaveText(0.22, 0.68+0.013, 0.46, 0.68+0.155, "NDC")
-   #chan     = ROOT.TPaveText(0.80, 0.77+0.013, 0.90, 0.77+0.155, "NDC")#droite
-   #chan     = ROOT.TPaveText(0.68, 0.76+0.013, 0.90, 0.76+0.155, "NDC")
+   #chan     = ROOT.TPaveText(0.22, 0.68+0.013, 0.46, 0.68+0.155, "NDC")
+   chan     = ROOT.TPaveText(0.80, 0.77+0.013, 0.90, 0.77+0.155, "NDC")#droite
    chan.SetBorderSize(   0 )
    chan.SetFillStyle(    0 )
    chan.SetTextAlign(   12 )
-   chan.SetTextSize ( 0.04 )
+   chan.SetTextSize ( 0.07 )
    chan.SetTextColor(    1 )
    chan.SetTextFont (   62 )
    texte=' '
@@ -86,7 +88,9 @@ def fix_maximum(channel_dict, type):
     """ Make sure everything is visible """
     max = channel_dict['stack'].GetMaximum()
     histo = channel_dict['data']
-    cushion=1.3
+    cushion=1.15
+    if type=="emu":
+	cushion=1.65
     #for bin in range(histo.GetNbinsX()):
     #    content = histo.GetBinContent(bin)
 	#L,U=poisson_errors(content)
@@ -97,7 +101,7 @@ def fix_maximum(channel_dict, type):
         #print bin, upper, max
         #if  U > max:
         #    max = U
-    channel_dict['stack'].SetMaximum(cushion*max/1)
+    channel_dict['stack'].SetMaximum(cushion*max/3.5)
     #if type=="ZH":
     #    channel_dict['stack'].SetMaximum(cushion * max/20)
 
@@ -118,7 +122,7 @@ def add_CMS():
     lowY=0.75
     lumi  = ROOT.TPaveText(lowX, lowY+0.06, lowX+0.15, lowY+0.16, "NDC")
     lumi.SetTextFont(61)
-    lumi.SetTextSize(0.06)
+    lumi.SetTextSize(0.07)
     lumi.SetBorderSize(   0 )
     lumi.SetFillStyle(    0 )
     lumi.SetTextAlign(   12 )
@@ -128,7 +132,7 @@ def add_CMS():
 
 def add_Preliminary():
     lowX=0.21
-    lowY=0.73
+    lowY=0.70
     lumi  = ROOT.TPaveText(lowX, lowY+0.06, lowX+0.15, lowY+0.16, "NDC")
     lumi.SetTextSize(0.03)
     lumi.SetBorderSize(   0 )
@@ -332,6 +336,13 @@ if __name__ == "__main__":
         #'muTau_nobtag': ['muTau_nobtag'],
         'muTau_btag': ['muTau_btag'],
     }
+
+    adapt=ROOT.gROOT.GetColor(12)
+    new_idx=ROOT.gROOT.GetListOfColors().GetSize() + 1
+    print new_idx
+    trans=ROOT.TColor(new_idx, adapt.GetRed(), adapt.GetGreen(),adapt.GetBlue(), "",0.5)
+    print new_idx
+
     num_bins_emu=10#15
     # ZH
     #histograms['emu'] = {}
@@ -428,13 +439,14 @@ if __name__ == "__main__":
 
 
         errorZH=emu_plots['ztt'].Clone()
-        errorZH.SetFillStyle(3013)
+        errorZH.SetFillStyle(3001)
         #errorZH.Add(emu_plots['low'])
         errorZH.Add(emu_plots['fakes'])
         errorZH.Add(emu_plots['ttbar'])
         errorZH.Add(emu_plots['EWK'])
         errorZH.SetMarkerSize(0)
-        errorZH.SetFillColor(13)
+        errorZH.SetFillColor(new_idx)
+        #errorZH.SetFillColor(13)
         errorZH.SetLineWidth(1)
         errorZH_rebin=rebin_dN(errorZH)
 
@@ -446,8 +458,9 @@ if __name__ == "__main__":
         emu_plots['data'].SetMarkerSize(2)
 	#emu_plots['data_rebin']=rebin_dN(emu_plots['data'])
 	def make_legend():
-            output = ROOT.TLegend(0.60, 0.65, 0.92, 0.90, "", "brNDC")
-	    #output = ROOT.TLegend(0.22, 0.55, 0.54, 0.80, "", "brNDC")
+            #output = ROOT.TLegend(0.595, 0.50, 0.92, 0.92, "", "brNDC")
+	    #output = ROOT.TLegend(0.22, 0.38, 0.54, 0.80, "", "brNDC")
+	    output = ROOT.TLegend(0.22, 0.38, 0.70, 0.80, "", "brNDC")
             output.SetLineWidth(0)
             output.SetLineStyle(0)
             output.SetFillStyle(0)
@@ -456,19 +469,19 @@ if __name__ == "__main__":
             return output
 
         emu_plots['legend'] = make_legend()
-        emu_plots['legend'].AddEntry(emu_plots['signal'],
-                                        "A (m=35 GeV, xs=40 pb)", "l")
+        emu_plots['legend'].AddEntry(emu_plots['signal'],"A#rightarrow#tau#tau (m=35 GeV, #sigma=40 pb)", "l")
+        #emu_plots['legend'].AddEntry(emu_plots['signal'], "(m=35 GeV)","")#, #sigma=40 pb)", "")
         #emu_plots['legend'].AddEntry(emu_plots['signal2'],
         #                                "a1(m=30 GeV, xs=40 pb)", "l")
         emu_plots['legend'].AddEntry(emu_plots['data'],
-                                        "Observed", "lp")
+                                        "Observed", "lep")
         #emu_plots['legend'].AddEntry(emu_plots['hww'],
         #                                "SM H(125 GeV)", "f")
         #emu_plots['legend'].AddEntry(emu_plots['low'], "Z#rightarrow#tau#tau (low mass)", "f")
         emu_plots['legend'].AddEntry(emu_plots['ztt'], "Z#rightarrow#tau#tau", "f")
         emu_plots['legend'].AddEntry(emu_plots['ttbar'], "t#bar{t}", "f")
-        emu_plots['legend'].AddEntry(emu_plots['EWK'],"EWK", "f")
-        emu_plots['legend'].AddEntry(emu_plots['fakes'],"Fakes", "f")
+        emu_plots['legend'].AddEntry(emu_plots['EWK'],"Electroweak", "f")
+        emu_plots['legend'].AddEntry(emu_plots['fakes'],"Misidentified e/#mu", "f")
         if args.prefit==False:
            emu_plots['legend'].AddEntry(errorZH, "Bkg. uncertainty", "F")
 
@@ -562,13 +575,14 @@ if __name__ == "__main__":
         etau_plots['stack2'].Add(rebin_dN(etau_plots['signal2']), 'hist')
 
         errorETAU=etau_plots['ztt'].Clone()
-        errorETAU.SetFillStyle(3013)
+        errorETAU.SetFillStyle(3001)
         #errorETAU.Add(etau_plots['low'])
         errorETAU.Add(etau_plots['fakes'])
         errorETAU.Add(etau_plots['ttbar'])
         errorETAU.Add(etau_plots['EWK'])
         errorETAU.SetMarkerSize(0)
         errorETAU.SetFillColor(13)
+        errorETAU.SetFillColor(new_idx)
         errorETAU.SetLineWidth(1)
         errorETAU_rebin=rebin_dN(errorETAU)
 
@@ -581,21 +595,23 @@ if __name__ == "__main__":
         #emu_plots['data_rebin']=rebin_dN(emu_plots['data'])
 
         etau_plots['legend'] = make_legend()
-        etau_plots['legend'].AddEntry(etau_plots['signal'],
-                                        "A (m=35 GeV, xs=40 pb)", "l")
+        #etau_plots['legend'].AddEntry(etau_plots['signal'],
+        #                                "A (m=35 GeV, xs=40 pb)", "l")
+        etau_plots['legend'].AddEntry(etau_plots['signal'],"A#rightarrow#tau#tau (m=35 GeV, #sigma=40 pb)", "l")
+        #etau_plots['legend'].AddEntry(etau_plots['signal'], "(m=35 GeV, #sigma=40 pb)", "")
         #etau_plots['legend'].AddEntry(etau_plots['signal2'],
         #                                "a1(m=30 GeV, xs=40 pb)", "l")
         etau_plots['legend'].AddEntry(etau_plots['data'],
-                                        "Observed", "lp")
+                                        "Observed", "lep")
         #etau_plots['legend'].AddEntry(etau_plots['hww'],
         #                                "SM H(125 GeV)", "f")
         #etau_plots['legend'].AddEntry(etau_plots['low'], "Z#rightarrow#tau#tau (low mass)", "f")
         etau_plots['legend'].AddEntry(etau_plots['ztt'], "Z#rightarrow#tau#tau", "f")
         etau_plots['legend'].AddEntry(etau_plots['ttbar'], "t#bar{t}", "f")
         etau_plots['legend'].AddEntry(etau_plots['EWK'],
-                                        "EWK", "f")
+                                        "Electroweak", "f")
         etau_plots['legend'].AddEntry(etau_plots['fakes'],
-                                        "QCD", "f")
+                                        "QCD multijet", "f")
         if args.prefit==False:
            etau_plots['legend'].AddEntry(errorETAU, "Bkg. uncertainty", "F")
 
@@ -691,13 +707,14 @@ if __name__ == "__main__":
         mutau_plots['stack2'].Add(rebin_dN(mutau_plots['signal2']), 'hist')
 
         errorMUTAU=mutau_plots['ztt'].Clone()
-        errorMUTAU.SetFillStyle(3013)
+        errorMUTAU.SetFillStyle(3001)
         #errorMUTAU.Add(mutau_plots['low'])
         errorMUTAU.Add(mutau_plots['fakes'])
         errorMUTAU.Add(mutau_plots['ttbar'])
         errorMUTAU.Add(mutau_plots['EWK'])
         errorMUTAU.SetMarkerSize(0)
-        errorMUTAU.SetFillColor(13)
+        #errorMUTAU.SetFillColor(13)
+        errorMUTAU.SetFillColor(new_idx)
         errorMUTAU.SetLineWidth(1)
         errorMUTAU_rebin=rebin_dN(errorMUTAU)
 
@@ -710,21 +727,23 @@ if __name__ == "__main__":
         #mutau_plots['data_rebin']=rebin_dN(mutau_plots['data'])
 
         mutau_plots['legend'] = make_legend()
-        mutau_plots['legend'].AddEntry(mutau_plots['signal'],
-                                        "A (m=35 GeV, xs=40 pb)", "l")
+        #mutau_plots['legend'].AddEntry(mutau_plots['signal'],
+        #                                "A (m=35 GeV, xs=40 pb)", "l")
+        mutau_plots['legend'].AddEntry(mutau_plots['signal'],"A#rightarrow#tau#tau (m=35 GeV, #sigma=40 pb)", "l")
+        #mutau_plots['legend'].AddEntry(mutau_plots['signal'], "(m=35 GeV, #sigma=40 pb)", "")
         #mutau_plots['legend'].AddEntry(mutau_plots['signal2'],
         #                                "a1(m=30 GeV, xs=40 pb)", "l")
         mutau_plots['legend'].AddEntry(mutau_plots['data'],
-                                        "Observed", "lp")
+                                        "Observed", "lep")
         #mutau_plots['legend'].AddEntry(mutau_plots['hww'],
         #                                "SM H(125 GeV)", "f")
         #mutau_plots['legend'].AddEntry(mutau_plots['low'], "Z#rightarrow#tau#tau (low mass)", "f")
         mutau_plots['legend'].AddEntry(mutau_plots['ztt'], "Z#rightarrow#tau#tau", "f")
         mutau_plots['legend'].AddEntry(mutau_plots['ttbar'], "t#bar{t}", "f")
         mutau_plots['legend'].AddEntry(mutau_plots['EWK'],
-                                        "EWK", "f")
+                                        "Electroweak", "f")
         mutau_plots['legend'].AddEntry(mutau_plots['fakes'],
-                                        "QCD", "f")
+                                        "QCD multijet", "f")
         if args.prefit==False:
            mutau_plots['legend'].AddEntry(errorMUTAU, "Bkg. uncertainty", "F")
 
@@ -732,7 +751,10 @@ if __name__ == "__main__":
     for channel in histograms.keys():
 	print channel
         histograms[channel]['poisson'] = convert(histograms[channel]['data'],set_zero_bins=-10)
-        fix_maximum(histograms[channel],'ZH')
+	if channel=="emu_btag":
+	   fix_maximum(histograms[channel],'emu')
+        else:
+           fix_maximum(histograms[channel],'ZH')
         histograms[channel]['stack'].Draw("")
         histograms[channel]['stack'].GetYaxis().SetTitle("#bf{Events / GeV}")#("#bf{dN/dm_{#tau#tau} [1/GeV]}" )
         histograms[channel]['stack'].GetXaxis().SetTitle("#bf{m_{#tau#tau} [GeV]}")
@@ -758,9 +780,9 @@ if __name__ == "__main__":
 
     for emu_key in emu_subplots:
         histograms[emu_key]['stack'].Draw()
-        #histograms[emu_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
-        #histograms[emu_key]['stack'].Draw("same")
-	#histograms[emu_key]['stack'].Draw("axis same")
+        histograms[emu_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
+        histograms[emu_key]['stack'].Draw("same")
+	histograms[emu_key]['stack'].Draw("axis same")
         #histograms[emu_key]['stack2'].Draw("same")
         if args.prefit==False:
            histograms[emu_key]['error'].Draw("e2same")
@@ -793,9 +815,9 @@ if __name__ == "__main__":
 
     for etau_key in etau_subplots:
         histograms[etau_key]['stack'].Draw()
-        #histograms[etau_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
-        #histograms[etau_key]['stack'].Draw("same")
-        #histograms[etau_key]['stack'].Draw("axis same")
+        histograms[etau_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
+        histograms[etau_key]['stack'].Draw("same")
+        histograms[etau_key]['stack'].Draw("axis same")
         #histograms[etau_key]['stack2'].Draw("same")
         if args.prefit==False:
            histograms[etau_key]['error'].Draw("e2same")
@@ -823,9 +845,9 @@ if __name__ == "__main__":
 
     for mutau_key in mutau_subplots:
         histograms[mutau_key]['stack'].Draw()
-        #histograms[mutau_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
-        #histograms[mutau_key]['stack'].Draw("same")
-        #histograms[mutau_key]['stack'].Draw("axis same")
+        histograms[mutau_key]['stack'].GetHistogram().GetXaxis().SetRangeUser(0,50)
+        histograms[mutau_key]['stack'].Draw("same")
+        histograms[mutau_key]['stack'].Draw("axis same")
         #histograms[mutau_key]['stack2'].Draw("same")
         if args.prefit==False:
            histograms[mutau_key]['error'].Draw("e2same")

@@ -189,7 +189,7 @@ void compareVHlimits(const char* filename, const char* channelstr, bool expected
       }
       else{
 	//y_title = std::string("#sigma(H#rightarrow#tau#tau)_{95% CL} / #sigma(H#rightarrow#tau#tau)_{SM}");
-	y_title = std::string("95% CL limit on #sigma *BR [pb]");
+	y_title = std::string("95% CL limit on #sigma *B [pb]");
       }
       hexp[i]->GetYaxis()->SetTitle(y_title.c_str());
       hexp[i]->GetYaxis()->SetLabelFont(62);
@@ -330,7 +330,7 @@ void compareVHlimits(const char* filename, const char* channelstr, bool expected
     }
     TPaveText* lumi  = new TPaveText(0.21, 0.77+0.06, 0.21+0.15, 0.77+0.16, "NDC");
     lumi->SetTextFont(61);
-    lumi->SetTextSize(0.04);
+    lumi->SetTextSize(0.06);
     lumi->SetBorderSize(   0 );
     lumi->SetFillStyle(    0 );
     lumi->SetTextAlign(   12 );
@@ -346,14 +346,14 @@ void compareVHlimits(const char* filename, const char* channelstr, bool expected
     lumi2->SetTextColor(    1 );
     lumi2->SetTextFont(52);
     lumi2->AddText("Preliminary");
-    lumi2->Draw();
+    //lumi2->Draw();
 
-    TPaveText* lumi3  = new TPaveText(0.74, 0.835+0.06, 0.74+0.30, 0.835+0.16, "NDC");
+    TPaveText* lumi3  = new TPaveText(0.65, 0.835+0.06, 0.65+0.30, 0.835+0.16, "NDC");
     lumi3->SetBorderSize(   0 );
     lumi3->SetFillStyle(    0 );
     lumi3->SetTextAlign(   12 );
     lumi3->SetTextColor(    1 );
-    lumi3->SetTextSize(0.03);
+    lumi3->SetTextSize(0.045);
     lumi3->AddText("19.7 fb^{-1} (8 TeV)");
     lumi3->Draw();
 
