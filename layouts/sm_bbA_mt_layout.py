@@ -9,7 +9,7 @@ layout = cms.PSet(
     ## x-axis title
     xaxis = cms.string("m_{A} [GeV]"),
     ## x-axis title
-    yaxis = cms.string("95% CL #sigma(bbA) #times BR(A#rightarrow#tau#tau) [pb]"),
+    yaxis = cms.string("95% CL #sigma(bbA) #times B(A#rightarrow#tau#tau) [pb]"),
     ## plot expected only
     expectedOnly = cms.bool(False),
     ## is this mssm?

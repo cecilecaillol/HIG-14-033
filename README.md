@@ -38,6 +38,7 @@ cp HIG-14-033/uncertainty_files/* HiggsAnalysis/HiggsToTauTau/setup/em/.
 cp HIG-14-033/root_file/*.root auxiliaries/shapes/VHTT/.
 cp HIG-14-033/postfit_right_errors.py HiggsAnalysis/HiggsToTauTau/test/postfit.py
 cp HIG-14-033/layouts/*.py HiggsAnalysis/HiggsToTauTau/python/layouts/.
+cp HIG-14-033/Limit.cc HiggsAnalysis/HiggsToTauTau/src/Limit.cc
 ```
 
 Changes to HiggsTauTau package:
