@@ -29,6 +29,7 @@ then check out this package:
 
 ```shell
 git clone https://github.com/cecilecaillol/HIG-14-033.git
+scram b -j 4
 ```
 
 Copy the files:

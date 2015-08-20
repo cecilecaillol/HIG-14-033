@@ -38,15 +38,10 @@ ZH_CONFIGS8=$(wildcard $(SETUP)/*-sm-8TeV-01.* $(SETUP)/*-sm-8TeV-02.* $(SETUP)/
 $(CARDS)/.zh8_timestamp: $(SHAPEFILE8) $(ZH_CONFIGS8)
 	@echo "Recipes for building ZH cards 8TeV"
 	rm -f $(CARDS)/em_1_8TeV*
-	#rm -f $(CARDS)/em_2_8TeV*
 	rm -f $(CARDS)/em_3_8TeV*
-	#rm -f $(CARDS)/em_0_8TeV*
 	rm -f $(CARDS)/em_4_8TeV*
-	#rm -f $(CARDS)/em_5_8TeV*
 	rm -f $@
-	#cd $(BASE)  && $(WD)/add_bbb_errors_VH.py -f 'em:8TeV:01:Fakes,DYlow' -i $(SETUP1) -o $(SETUPBBB) --threshold 0.10 && $(WD)/add_bbb_errors_VH.py -f 'em:8TeV:03,04:W,QCD,ZTT_lowMass' -i $(SETUPBBB) -o $(SETUPBBB2) --threshold 0.10 && setup-datacards.py -i $(SETUPBBB2) -p 8TeV --a sm 25_80:5 -c em --sm-categories-em "1 3 4" && touch $@
 	cd $(BASE)  && $(WD)/add_bbb_errors_VH.py -f 'em:8TeV:01:Fakes,DYlow' -i $(SETUP1) -o $(SETUPBBB) --threshold 0.10 && $(WD)/add_bbb_errors_VH.py -f 'em:8TeV:03,04:QCD,ZTT_lowMass' -i $(SETUPBBB) -o $(SETUPBBB2) --threshold 0.10 && setup-datacards.py -i $(SETUPBBB2) -p 8TeV --a sm 25_80:5 -c em --sm-categories-em "1 3 4" && touch $@
-	#cd $(BASE)  && $(WD)/add_bbb_errors_VH.py -f 'em:8TeV:01,02:Fakes,Ztt,ttbar,EWK' -i $(SETUP1) -o $(SETUPBBB) --threshold 0.10 --normalize && setup-datacards.py -i $(SETUPBBB) -p 8TeV --a sm 25-80:5 -c em --sm-categories-em "1 2" && touch $@
 
 zh: $(CARDS)/.zh8_timestamp
 
@@ -79,24 +74,15 @@ $(HTT_TEST)/.fit_timestamp: $(LIMITDIR)/.timestamp
 $(HTT_TEST)/root_postfit/.timestamp: $(HTT_TEST)/.fit_timestamp
 	rm -fr $(HTT_TEST)/root_postfit
 	cp -r $(HTT_TEST)/root $(HTT_TEST)/root_postfit
-	#cd $(HTT_TEST) && ./postfit.py root_postfit/htt_em.input_8TeV.root datacards/htt_em_0_8TeV.txt \
-	#  --bins muTau_nobtag \
-	#  --verbose
 	cd $(HTT_TEST) && ./postfit.py root_postfit/htt_em.input_8TeV.root datacards/htt_em_1_8TeV.txt \
           --bins emu_btag \
           --verbose
-	#cd $(HTT_TEST) && ./postfit.py root_postfit/htt_em.input_8TeV.root datacards/htt_em_2_8TeV.txt \
-        #  --bins emu_btag \
-        #  --verbose
 	cd $(HTT_TEST) && ./postfit.py root_postfit/htt_em.input_8TeV.root datacards/htt_em_3_8TeV.txt \
           --bins muTau_btag \
           --verbose
 	cd $(HTT_TEST) && ./postfit.py root_postfit/htt_em.input_8TeV.root datacards/htt_em_4_8TeV.txt \
           --bins eleTau_btag \
           --verbose
-	#cd $(HTT_TEST) && ./postfit.py root_postfit/htt_em.input_8TeV.root datacards/htt_em_5_8TeV.txt \
-        #  --bins eleTau_nobtag \
-        #  --verbose
 	touch $@
 
 plots/.mass_timestamp: $(HTT_TEST)/root_postfit/.timestamp
@@ -127,14 +113,6 @@ $(LIMITDIR)/.chan_computed: $(LIMITDIR)/.timestamp
 	./compute_limits.sh emu $(NPROCS)
 	./compute_limits.sh etau $(NPROCS)
 	./compute_limits.sh mutau $(NPROCS)
-	#./compute_limits.sh btag $(NPROCS)
-	#./compute_limits.sh nobtag $(NPROCS)
-	#./compute_limits.sh eleTau_btag $(NPROCS)
-	#./compute_limits.sh muTau_btag $(NPROCS)
-	#./compute_limits.sh emu_btag $(NPROCS)
-	#./compute_limits.sh eleTau_nobtag $(NPROCS)
-	#./compute_limits.sh muTau_nobtag $(NPROCS)
-	#./compute_limits.sh emu_btag $(NPROCS)
 	touch $@
 
 limits: $(LIMITDIR)/.computed $(LIMITDIR)/.chan_computed
@@ -150,44 +128,20 @@ $(BASE)/HiggsAnalysis/HiggsToTauTau/macros/compareLimits_C.so: $(BASE)/HiggsAnal
 
 comparemacro: $(BASE)/HiggsAnalysis/HiggsToTauTau/macros/compareLimits_C.so
 
-$(LIMITDIR)/.plot_timestamp: $(LIMITDIR)/.computed $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_*.py
+$(LIMITDIR)/.plot_timestamp: $(LIMITDIR)/.computed $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_bbA_*.py
 	rm -f $@
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py cmb/ max=80.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py eleTau_btag/ max=100.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py muTau_btag/ max=100.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py emu_btag/ max=100.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py eleTau_nobtag/ max=400.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py muTau_nobtag/ max=400.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py emu_btag/ max=400.0
 	cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_bbA_em_layout.py emu/ max=100.0
 	cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_bbA_et_layout.py etau/ max=100.0
 	cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_bbA_mt_layout.py mutau/ max=100.0
 	cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_bbA_cmb_layout.py cmb/ max=100.0 min=10.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py btag/ max=100.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py nobtag/ max=400.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py etau/ max=180.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py mutau/ max=180.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py emu/ max=180.0
 	touch $@
 
 plots/.limits_timestamp: $(LIMITDIR)/.plot_timestamp
 	mkdir -p plots
-	#cp $(LIMITDIR)/vhtt_zh_exp_limit.pdf plots/
-	#cp $(LIMITDIR)/vhtt_zh_exp_limit.tex plots/
-	#cp $(LIMITDIR)/vhtt_zh_limit.pdf plots/
-	#cp $(LIMITDIR)/vhtt_zh_limit.tex plots/
 	touch $@
 
-$(LIMITDIR)/.chan_plot_timestamp: $(LIMITDIR)/.chan_computed $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_*.py
+$(LIMITDIR)/.chan_plot_timestamp: $(LIMITDIR)/.chan_computed $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_bbA_*.py
 	rm -f $@
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py lowDR/ max=200.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py mediumDR/ max=200.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py highDR/ max=200.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_em_exp_layout.py nocat/ max=200.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py llem/ max=40.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py llmt/ max=40.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py llet/ max=40.0
-	#cd $(LIMITDIR) && plot --asymptotic $(BASE)/HiggsAnalysis/HiggsToTauTau/python/layouts/sm_vhtt_layout.py lltt/ max=40.0
 	rm -f $(LIMITDIR)/limits_limit.root 
 	hadd $(LIMITDIR)/limits_limit.root $(LIMITDIR)/*_limit.root
 	#root -b -q 'compareVHlimits.C+("limits/limits_limit.root", "eleTau_btag,emu_btag,muTau_btag,cmb", true, false, "sm-xsex", 0, 200, false,"CMS Preliminary, 19.7 fb^{-1} at 8TeV",false,true)'
@@ -225,8 +179,8 @@ $(LIMITDIR)/.plot_signif_timestamp: $(LIMITDIR)/.computed_signif $(BASE)/HiggsAn
 	touch $@
 
 plots/.significances_timestamp: $(LIMITDIR)/.plot_signif_timestamp
-	cp $(LIMITDIR)/cmb_significance.tex plots/
-	cp $(LIMITDIR)/cmb_significance.pdf plots/
+	#cp $(LIMITDIR)/cmb_significance.tex plots/
+	#cp $(LIMITDIR)/cmb_significance.pdf plots/
 	touch $@
 
 plotsignificances: plots/.significances_timestamp
